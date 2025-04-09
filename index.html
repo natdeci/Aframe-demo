@@ -1,210 +1,192 @@
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ISGS VR UI with Video Play Button</title>
-        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-        <script src="info-panel.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-        <script>
-            AFRAME.registerComponent('follow-camera', {
-                tick: function () {
-                    const cameraEl = document.querySelector('[camera]');
-                    if (cameraEl) {
-                        const camWorldPos = new THREE.Vector3();
-                        cameraEl.object3D.getWorldPosition(camWorldPos);
-                        this.el.object3D.position.copy(camWorldPos);
-                    }
-                }
-            });
-
-            AFRAME.registerComponent('fade-effect', {
-                schema: {
-                    direction: { type: 'string', default: 'in' },
-                    duration: { type: 'number', default: 1000 }
-                },
-                init: function () {
-                    const el = this.el;
-                    const startScale = this.data.direction === 'in' ? 0.001 : 2.5;
-                    const endScale = this.data.direction === 'in' ? 2.5 : 0.001;
-                    el.setAttribute('visible', true);
-                    el.setAttribute('scale', `${startScale} ${startScale} ${startScale}`);
-                    el.removeAttribute('animation__fade');
-                    el.setAttribute('animation__fade', {
-                        property: 'scale',
-                        to: `${endScale} ${endScale} ${endScale}`,
-                        dur: this.data.duration,
-                        easing: 'easeInOutQuad',
-                        startEvents: 'fadeStart'
-                    });
-                    el.emit('fadeStart');
-                    if (this.data.direction === 'out') {
-                        setTimeout(() => el.setAttribute('visible', false), this.data.duration);
-                    }
-                }
-            });
-
-            AFRAME.registerComponent('poster-button', {
-                schema: { target: { type: 'string' } },
-                init: function () {
-                    this.el.addEventListener('click', () => {
-                    const fadeEl = document.getElementById('fadeBackground');
-                    fadeEl.setAttribute('fade-effect', { direction: 'in', duration: 800 });
-
-                    setTimeout(() => {
-                        const infoPanel = document.getElementById('infoPanel');
-                        infoPanel.setAttribute('visible', true);
-                        infoPanel.setAttribute('animation', {
-                        property: 'scale',
-                        to: '1 1 1',
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISGS</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-joystick-controls@4.0.1/dist/aframe-joystick-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nipplejs@0.8.5/dist/nipplejs.min.js"></script>
+    <script src="info-panel.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script> -->
+    <script src="highlight.js"></script>
+    <script>
+        AFRAME.registerComponent("poster-button", {
+            schema: { target: { type: "string" } },
+            init: function () {
+                this.el.addEventListener("click", () => {
+                    const infoPanel = document.getElementById("infoPanel");
+                    infoPanel.setAttribute("visible", true);
+                    infoPanel.setAttribute("animation", {
+                        property: "scale",
+                        to: "1 1 1",
                         dur: 400,
-                        easing: 'easeOutBack'
-                        });
-
-                        // Show the correct movie image
-                        ['ponyo', 'karigurashi', 'kazetachinu'].forEach(movie => {
-                        document.getElementById(`${movie}MovieImage`).setAttribute('visible', movie === this.data.target);
-                        });
-
-                        window.dispatchEvent(new CustomEvent('show-panel', { detail: { target: this.data.target } }));
-                        }, 500);
+                        easing: "easeOutBack",
                     });
-                    }
-                });
 
-            document.addEventListener('DOMContentLoaded', function () {
-                const playButton = document.getElementById('playButton');
-                const videoEl = document.querySelector('#videoElement');
+                    ["ponyo", "karigurashi", "kazetachinu"].forEach((movie) => {
+                        document
+                            .getElementById(`${movie}MovieImage`)
+                            .setAttribute("visible", movie === this.data.target);
+                    });
 
-                playButton.addEventListener('click', () => {
-                    if (videoEl && videoEl.components.material) {
-                        const video = videoEl.components.material.material.map.image;
-                        video.play();
-                        playButton.setAttribute('visible', 'false');
-                    }
+                    window.dispatchEvent(
+                        new CustomEvent("show-panel", {
+                            detail: { target: this.data.target },
+                        })
+                    );
                 });
+            },
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const playButton = document.getElementById("playButton");
+            const videoEl = document.querySelector("#videoElement");
+
+            playButton.addEventListener("click", () => {
+                if (videoEl && videoEl.components.material) {
+                    const video = videoEl.components.material.material.map.image;
+                    video.play();
+                    playButton.setAttribute("visible", "false");
+                }
             });
-        </script>
-    </head>
+        });
+    </script>
+</head>
 
-    <body>
-        <a-scene background="color: #F5EEDC" environment cursor="rayOrigin: mouse; fuse: false"
-            raycaster="objects: .raycastable">
-            <a-assets>
-                <img id="kazetachinu" src="assets/1.jpg" crossorigin="anonymous" alt="kazetachinu image"/>
-                <img id="kazetachinuPoster" src="assets/logo 1.jpg" crossorigin="anonymous" alt="kazetachinu Poster"/>
-                <img id="ponyo" src="assets/2.jpg" crossorigin="anonymous" alt="ponyo image"/>
-                <img id="ponyoPoster" src="assets/logo 2.jpg" crossorigin="anonymous" alt="ponyo Poster"/>
-                <img id="karigurashi" src="assets/3.jpg" crossorigin="anonymous" alt="karigurashi image"/>
-                <img id="karigurashiPoster" src="assets/logo 3.jpg" crossorigin="anonymous" alt="karigurashi Poster"/>
-                <img id="playpause" src="assets/play-pause.png" alt="">
-                <a-asset-item id="officeModel" src="models/meeting_room.glb"></a-asset-item>
-                <a-asset-item id="isomatric" src="models/isometric_office.glb"></a-asset-item>
+<style>
+    html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    }
 
-                <a-mixin id="frame"
-                    geometry="primitive: plane; width: 0.55; height: 0.79"
-                    material="color: transparent; opacity: 0; shader: flat"
-                    animation__scale="property: scale; to: 0.36 0.36 1.2; dur: 200; startEvents: mouseenter"
-                    animation__scale_reverse="property: scale; to: 0.3 0.3 1; dur: 200; startEvents: mouseleave">
-                </a-mixin>
+    a-scene {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    }
+</style>
 
-                <a-mixin id="poster" geometry="primitive: plane; width: 0.55; height: 0.79"
-                    material="color: white; shader: flat" position="0 0 0.005">
-                </a-mixin>
+<body>
+    <a-scene environment cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .raycastable">
 
-                <a-mixin id="movieImage"
-                    geometry="primitive: plane; width: 0.9; height: 0.5"
-                    material="shader: flat; transparent: true"
-                    position="0 0.22 0.002"
-                    scale="0.5 0.5 1">
-                </a-mixin>  
-            </a-assets>
+        <!-- Background -->
+        <a-sky src="assets/table_mountain_2_puresky.jpg"></a-sky>
 
-            <a-entity gltf-model="#isomatric" position="5.029 0.152 -6.951" scale="1 1 1" rotation="0 0 0"></a-entity>
+        <!-- Assets -->
+        <a-assets>
+            <img id="kazetachinu" src="assets/1.jpg" crossorigin="anonymous" alt="kazetachinu image" />
+            <img id="kazetachinuPoster" src="assets/logo 1.jpg" crossorigin="anonymous" alt="kazetachinu Poster" />
+            <img id="ponyo" src="assets/2.jpg" crossorigin="anonymous" alt="ponyo image" />
+            <img id="ponyoPoster" src="assets/logo 2.jpg" crossorigin="anonymous" alt="ponyo Poster" />
+            <img id="karigurashi" src="assets/3.jpg" crossorigin="anonymous" alt="karigurashi image" />
+            <img id="karigurashiPoster" src="assets/logo 3.jpg" crossorigin="anonymous" alt="karigurashi Poster" />
+            <img id="playpause" src="assets/play-pause.png" alt="">
+            <img id="isgs" src="assets/1sGS-Logo-Color-2708px-1-1024x1024.png" alt="">
+            <a-asset-item id="officeModel" src="models/meeting_room.glb"></a-asset-item>
+            <a-asset-item id="isomatric" src="models/isometric_office.glb"></a-asset-item>
 
-            <a-entity position="-1.150 1.2 1.670" camera look-controls wasd-controls>
-                <a-entity id="fadeBackground" geometry="primitive: sphere; radius: 2.5"
-                    material="color: #000000; opacity: 0; side: back; shader: flat;" visible="true" follow-camera>
+            <a-mixin id="frame" geometry="primitive: plane; width: 0.55; height: 0.79"
+                material="color: transparent; opacity: 0; shader: flat"
+                animation__scale="property: scale; to: 0.36 0.36 1.2; dur: 200; startEvents: mouseenter"
+                animation__scale_reverse="property: scale; to: 0.3 0.3 1; dur: 200; startEvents: mouseleave">
+            </a-mixin>
+
+            <a-mixin id="poster" geometry="primitive: plane; width: 0.55; height: 0.79"
+                material="color: white; shader: flat" position="0 0 0.005">
+            </a-mixin>
+
+            <a-mixin id="movieImage" geometry="primitive: plane; width: 0.9; height: 0.5"
+                material="shader: flat; transparent: true" position="0 0.22 0.002" scale="0.5 0.5 1">
+            </a-mixin>
+        </a-assets>
+
+        <!-- Model -->
+        <a-entity gltf-model="#isomatric" position="5.029 0.152 -6.951" scale="1 1 1"></a-entity>
+
+        <!-- Rig with Joystick + Camera -->
+        <!-- <a-entity id="rig" position="-0.806 1.2 -2.073" joystick-controls="enabled: true" movement-controls>
+            <a-entity camera position="0 1.6 0" look-controls="touchEnabled: true; pointerLockEnabled: true"></a-entity>
+        </a-entity> -->
+        <!-- <a-entity id="rig" movement-controls joystick-controls="enabled: true">
+            <a-entity position="-0.806 1.2 -2.073" rotation="0 180 0" camera wasd-controls look-controls="pointerLockEnabled: false"></a-entity>
+        </a-entity> -->
+
+        <a-entity id="rig" movement-controls="controls: gamepad,keyboard,nipple" nipple-controls="mode: static">
+            <a-entity camera position="0 1.6 0" look-controls="pointerLockEnabled: true"> </a-entity>
+        </a-entity>
+
+        <!-- Logo -->
+        <a-entity position="-0.806 1.8 -4" scale="1 1 1">
+            <a-image src="#isgs"></a-image>
+        </a-entity>
+
+        <!-- Video Screen -->
+        <a-entity position="-4.91 1.34 1.44" rotation="0 90 0" scale="0.43 0.43 1">
+            <a-video src="assets/video.mp4" width="4" height="2.5" id="videoElement"></a-video>
+        </a-entity>
+
+        <!-- Play Button -->
+        <a-image id="playButton" src="#playpause" position="-4.88 0.970 1.507" width="0.25" height="0.25"
+            rotation="0 90 0" class="raycastable" scale="0.4 0.4 0.4"
+            animation__mouseenter="property: scale; to: 0.5 0.5 0.5; dur: 200; startEvents: mouseenter"
+            animation__mouseleave="property: scale; to: 0.4 0.4 0.4; dur: 200; startEvents: mouseleave">
+        </a-image>
+
+        <!-- Ground -->
+        <a-entity position="0 0 -2" geometry="primitive: box; width: 10; height: 0.1; depth: 10"
+            material="color: #ccc;"></a-entity>
+
+        <!-- UI -->
+        <a-entity id="ui" position="1.612 1.186 1.612" info-panel>
+            <a-entity id="menu" highlight position="0 0 -0.022">
+                <a-entity id="karigurashiButton" position="-0.237 0 0.024" mixin="frame" class="raycastable menu-button"
+                    scale="0.3 0.3 1" rotation="0 3.240 0" poster-button="target: karigurashi">
+                    <a-entity material="src: #karigurashiPoster;" mixin="poster"></a-entity>
+                </a-entity>
+
+                <a-entity id="kazetachinuButton" position="-0.067 0 0.019" mixin="frame" class="raycastable menu-button"
+                    scale="0.3 0.3 1" rotation="0 3.240 0" poster-button="target: kazetachinu">
+                    <a-entity material="src: #kazetachinuPoster" mixin="poster"></a-entity>
+                </a-entity>
+
+                <a-entity id="ponyoButton" position="0.102 0 0.010" mixin="frame" class="raycastable menu-button"
+                    rotation="0 3.240 0" scale="0.3 0.3 1" poster-button="target: ponyo">
+                    <a-entity material="src: #ponyoPoster" mixin="poster"></a-entity>
                 </a-entity>
             </a-entity>
 
-            <a-entity 
-            id="rig"
-            position="0 1.6 0"
-            movement-controls="fly: false"
-            >
-            <a-entity 
-                camera 
-                look-controls 
-                position="0 0 0"
-            ></a-entity>
-            </a-entity>
+            <!-- Info Panel -->
+            <a-entity id="infoPanel" position="-0.605 -0.216 0.127" visible="false" scale="0.001 0.001 0.001"
+                rotation="0 26.459 0" geometry="primitive: plane; width: 0.6; height: 0.7"
+                material="color: transparent; opacity: 0; shader: flat" class="raycastable">
+                <a-entity id="ponyoMovieImage" mixin="movieImage" material="src: #ponyo" visible="false"></a-entity>
+                <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu"
+                    visible="false"></a-entity>
+                <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi"
+                    visible="false"></a-entity>
 
-            <a-entity position="-4.91 1.34 1.44" rotation="0 90 0" scale="0.43 0.43 1">
-                <a-video src="assets/video.mp4" width="4" height="2.5" id="videoElement"></a-video>
-            </a-entity>
-
-            <a-image id="playButton" 
-                src="#playpause" 
-                position="-4.88 0.970 1.507" 
-                width="0.25" height="0.25" 
-                rotation="0 90 0"
-                class="raycastable"
-                scale="0.4 0.4 0.4"
-                animation__mouseenter="property: scale; to: 0.5 0.5 0.5; dur: 200; startEvents: mouseenter"
-                animation__mouseleave="property: scale; to: 0.4 0.4 0.4; dur: 200; startEvents: mouseleave">
-            </a-image>
-
-
-            <a-entity position="0 0 -2" geometry="primitive: box; width: 10; height: 0.1; depth: 10"
-                material="color: #ccc;"></a-entity>
-
-            <a-entity id="ui" position="1.612 1.186 1.612">
-                <a-entity id="menu" highlight>
-                    <a-entity id="karigurashiButton" position="-0.243 0 0.024" mixin="frame" class="raycastable menu-button" scale="0.3 0.3 1" rotation="0 3.240 0" 
-                        poster-button="target: karigurashi">
-                        <a-entity material="src: #karigurashiPoster;" mixin="poster"></a-entity>
-                    </a-entity>
-
-                    <a-entity id="kazetachinuButton" position="-0.067 0 0.019" mixin="frame" class="raycastable menu-button" scale="0.3 0.3 1" rotation="0 3.240 0"
-                        poster-button="target: kazetachinu">
-                        <a-entity material="src: #kazetachinuPoster" mixin="poster"></a-entity>
-                    </a-entity>
-
-                    <a-entity id="ponyoButton" position="0.102 0 0.010" mixin="frame" class="raycastable menu-button" rotation="0 3.240 0" scale="0.3 0.3 1"
-                        poster-button="target: ponyo">
-                        <a-entity material="src: #ponyoPoster" mixin="poster"></a-entity>
-                    </a-entity>
+                <a-entity id="movieTitle" position="-0.255 0.347 0.003"
+                    text="shader: msdf; anchor: left; width: 0.5; color: white; value: Select a poster">
                 </a-entity>
 
-                <a-entity id="infoPanel"
-                    position="-0.605 -0.216 0.127"
-                    visible="false"
-                    scale="0.001 0.001 0.001"
-                    rotation="0 26.459 0"
-                    geometry="primitive: plane; width: 0.6; height: 0.7"
-                    material="color: transparent; opacity: 0; shader: flat"
-                    class="raycastable">
-
-                    <a-entity id="ponyoMovieImage" mixin="movieImage" material="src: #ponyo" visible="false"></a-entity>
-                    <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu" visible="false"></a-entity>
-                    <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi" visible="false"></a-entity>
-
-                    <a-entity id="movieTitle" position="-0.460 0.001 0.019"
-                        text="shader: msdf; anchor: left; width: 0.9; color: white; value: Select a poster">
-                    </a-entity>
-
-                    <a-entity id="movieDescription" position="-0.460 -0.072 0.019"
-                        text="baseline: top; shader: msdf; anchor: left; width: 0.9; color: white; value: Description will appear here.">
-                    </a-entity>
+                <a-entity id="movieDescription" position="-0.256 0.315 0.006"
+                    text="baseline: top; shader: msdf; anchor: left; width: 0.5; color: white; value: Description will appear here.">
                 </a-entity>
             </a-entity>
+        </a-entity>
 
-            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .raycastable"></a-entity>
-            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .raycastable"></a-entity>
-        </a-scene>
-    </body>
+        <!-- VR Hands (Optional for VR) -->
+        <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .raycastable"></a-entity>
+        <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .raycastable"></a-entity>
+    </a-scene>
+</body>
 
-    </html>
+</html>
