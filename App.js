@@ -6,7 +6,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <WebView 
-        source={{ uri: 'https://truemiha.github.io/aframe-office/' }}
+        source={{ uri: 'https://natdeci.github.io/Aframe-demo/' }}
         style={styles.webview}
         originWhitelist={['*']}
         javaScriptEnabled={true}
