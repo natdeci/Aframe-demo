@@ -7,7 +7,6 @@
         <title>ISGS VR UI with Video Play Button</title>
         <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
         <script src="info-panel.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
         <script>
             AFRAME.registerComponent('follow-camera', {
                 tick: function () {
@@ -99,106 +98,69 @@
                 <img id="ponyoPoster" src="assets/logo 2.jpg" crossorigin="anonymous" alt="ponyo Poster"/>
                 <img id="karigurashi" src="assets/3.jpg" crossorigin="anonymous" alt="karigurashi image"/>
                 <img id="karigurashiPoster" src="assets/logo 3.jpg" crossorigin="anonymous" alt="karigurashi Poster"/>
-                <img id="playpause" src="assets/play-pause.png" alt="">
                 <a-asset-item id="officeModel" src="models/meeting_room.glb"></a-asset-item>
-                <a-asset-item id="isomatric" src="models/isometric_office.glb"></a-asset-item>
 
-                <a-mixin id="frame"
-                    geometry="primitive: plane; width: 0.55; height: 0.79"
-                    material="color: transparent; opacity: 0; shader: flat"
-                    animation__scale="property: scale; to: 0.36 0.36 1.2; dur: 200; startEvents: mouseenter"
-                    animation__scale_reverse="property: scale; to: 0.3 0.3 1; dur: 200; startEvents: mouseleave">
+                <a-mixin id="frame" geometry="primitive: plane; width: 0.58; height: 0.82"
+                    material="color: white; shader: flat"
+                    animation__scale="property: scale; to: 1.2 1.2 1.2; dur: 200; startEvents: mouseenter"
+                    animation__scale_reverse="property: scale; to: 1 1 1; dur: 200; startEvents: mouseleave">
                 </a-mixin>
-
                 <a-mixin id="poster" geometry="primitive: plane; width: 0.55; height: 0.79"
-                    material="color: white; shader: flat" position="0 0 0.005">
-                </a-mixin>
-
-                <a-mixin id="movieImage"
-                    geometry="primitive: plane; width: 0.9; height: 0.5"
-                    material="shader: flat; transparent: true"
-                    position="0 0.22 0.002"
-                    scale="0.5 0.5 1">
-                </a-mixin>  
+                    material="color: white; shader: flat" position="0 0 0.005"></a-mixin>
+                <a-mixin id="movieImage" geometry="primitive: plane; width: 1.5; height: 0.81"
+                    material="shader: flat; transparent: true" position="0 0.495 0.002"></a-mixin>
             </a-assets>
 
-            <a-entity gltf-model="#isomatric" position="5.029 0.152 -6.951" scale="1 1 1" rotation="0 0 0"></a-entity>
+            <a-entity gltf-model="#officeModel" position="-3.6 0.3 1.8" scale="1 1 1" rotation="0 0 0"></a-entity>
 
-            <a-entity position="-1.150 1.2 1.670" camera look-controls wasd-controls>
+            <a-entity position="0 1.6 0" camera look-controls>
                 <a-entity id="fadeBackground" geometry="primitive: sphere; radius: 2.5"
-                    material="color: #000000; opacity: 0; side: back; shader: flat;" visible="true" follow-camera>
+                    material="color: #000000; opacity: 0.75; side: back; shader: flat;" visible="false" follow-camera>
                 </a-entity>
             </a-entity>
 
-            <a-entity 
-            id="rig"
-            position="0 1.6 0"
-            movement-controls="fly: false"
-            >
-            <a-entity 
-                camera 
-                look-controls 
-                position="0 0 0"
-            ></a-entity>
-            </a-entity>
-
-            <a-entity position="-4.91 1.34 1.44" rotation="0 90 0" scale="0.43 0.43 1">
+            <a-entity position="-3.35 1.75 -1.3" rotation="0 90 0" scale="0.7 0.7 1">
                 <a-video src="assets/video.mp4" width="4" height="2.5" id="videoElement"></a-video>
             </a-entity>
 
-            <a-image id="playButton" 
-                src="#playpause" 
-                position="-4.88 0.970 1.507" 
-                width="0.25" height="0.25" 
-                rotation="0 90 0"
-                class="raycastable"
-                scale="0.4 0.4 0.4"
+            <a-entity id="playButton" position="-0.559 1.370 -0.398" geometry="primitive: plane; width: 1; height: 1" rotation="0 90 0"
+                material="opacity: 0; transparent: true" class="raycastable"
                 animation__mouseenter="property: scale; to: 0.5 0.5 0.5; dur: 200; startEvents: mouseenter"
                 animation__mouseleave="property: scale; to: 0.4 0.4 0.4; dur: 200; startEvents: mouseleave">
-            </a-image>
-
+                <a-image src="#playIcon" width="0.3" height="0.3" position="0 0 0.01"></a-image>
+            </a-entity>
 
             <a-entity position="0 0 -2" geometry="primitive: box; width: 10; height: 0.1; depth: 10"
                 material="color: #ccc;"></a-entity>
 
-            <a-entity id="ui" position="1.612 1.186 1.612">
-                <a-entity id="menu" highlight>
-                    <a-entity id="karigurashiButton" position="-0.243 0 0.024" mixin="frame" class="raycastable menu-button" scale="0.3 0.3 1" rotation="0 3.240 0" 
+            <a-entity id="ui" position="0 1.6 0">
+                <a-entity id="menu">
+                    <a-entity id="karigurashiButton" position="-0.603 0 -1.186" mixin="frame" class="raycastable menu-button" rotation="0 30 0"
                         poster-button="target: karigurashi">
                         <a-entity material="src: #karigurashiPoster;" mixin="poster"></a-entity>
                     </a-entity>
 
-                    <a-entity id="kazetachinuButton" position="-0.067 0 0.019" mixin="frame" class="raycastable menu-button" scale="0.3 0.3 1" rotation="0 3.240 0"
+                    <a-entity id="kazetachinuButton" position="0 0 -1.334" mixin="frame" class="raycastable menu-button"
                         poster-button="target: kazetachinu">
                         <a-entity material="src: #kazetachinuPoster" mixin="poster"></a-entity>
                     </a-entity>
 
-                    <a-entity id="ponyoButton" position="0.102 0 0.010" mixin="frame" class="raycastable menu-button" rotation="0 3.240 0" scale="0.3 0.3 1"
+                    <a-entity id="ponyoButton" position="0.603 0 -1.186" mixin="frame" class="raycastable menu-button" rotation="0 -30 0"
                         poster-button="target: ponyo">
                         <a-entity material="src: #ponyoPoster" mixin="poster"></a-entity>
                     </a-entity>
                 </a-entity>
 
-                <a-entity id="infoPanel"
-                    position="-0.605 -0.216 0.127"
-                    visible="false"
-                    scale="0.001 0.001 0.001"
-                    rotation="0 26.459 0"
-                    geometry="primitive: plane; width: 0.6; height: 0.7"
-                    material="color: transparent; opacity: 0; shader: flat"
-                    class="raycastable">
-
+                <a-entity id="infoPanel" position="0.958 0 -0.246" visible="false" scale="0.001 0.001 0.001" rotation="0 -85 0"
+                    rotation="0 -45 0" geometry="primitive: plane; width: 1.0; height: 1.2"
+                    material="color: #333333; shader: flat; transparent: false" class="raycastable">
                     <a-entity id="ponyoMovieImage" mixin="movieImage" material="src: #ponyo" visible="false"></a-entity>
                     <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu" visible="false"></a-entity>
                     <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi" visible="false"></a-entity>
-
-                    <a-entity id="movieTitle" position="-0.460 0.001 0.019"
-                        text="shader: msdf; anchor: left; width: 0.9; color: white; value: Select a poster">
-                    </a-entity>
-
-                    <a-entity id="movieDescription" position="-0.460 -0.072 0.019"
-                        text="baseline: top; shader: msdf; anchor: left; width: 0.9; color: white; value: Description will appear here.">
-                    </a-entity>
+                    <a-entity id="movieTitle" position="-0.68 -0.1 0"
+                        text="shader: msdf; anchor: left; width: 1.5; color: white; value: Select a poster"></a-entity>
+                    <a-entity id="movieDescription" position="-0.68 -0.2 0"
+                        text="baseline: top; shader: msdf; anchor: left; width: 1.5; color: white; value: Description will appear here."></a-entity>
                 </a-entity>
             </a-entity>
 
