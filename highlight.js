@@ -1,3 +1,4 @@
+/* global AFRAME */
 AFRAME.registerComponent('highlight', {
   init: function () {
     var buttonEls = this.buttonEls = this.el.querySelectorAll('.menu-button');
@@ -6,8 +7,7 @@ AFRAME.registerComponent('highlight', {
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.reset = this.reset.bind(this);
-    backgroundEl && backgroundEl.addEventListener('click', this.reset);
-
+    backgroundEl.addEventListener('click', this.reset);
     for (var i = 0; i < buttonEls.length; ++i) {
       buttonEls[i].addEventListener('mouseenter', this.onMouseEnter);
       buttonEls[i].addEventListener('mouseleave', this.onMouseLeave);
@@ -16,27 +16,15 @@ AFRAME.registerComponent('highlight', {
   },
 
   onClick: function (evt) {
-    // Hapus scale manual dan gunakan event animasi
-    if (this.selectedButton) {
-      this.selectedButton.emit('mouseleave'); // Kembalikan ke normal
-    }
-
-    this.selectedButton = evt.target;
-    this.selectedButton.emit('mouseenter'); // Beri efek "terpilih"
-
-    // Highlight border/frame (ubah warna)
+    evt.target.pause();
     evt.target.setAttribute('material', 'color', '#046de7');
     this.el.addState('clicked');
+    evt.target.object3D.scale.set(1.2, 1.2, 1.2);
   },
 
   onMouseEnter: function (evt) {
     var buttonEls = this.buttonEls;
-
-    // Tambahkan efek glow saat hover
-    evt.target.setAttribute('material', 'color', '#046de7; emissive: #ffcc00; emissiveIntensity: 1');
-    evt.target.emit('mouseenter'); // Pakai animasi scale via mixin
-
-    // Reset warna tombol lainnya
+    evt.target.setAttribute('material', 'color', '#046de7');
     for (var i = 0; i < buttonEls.length; ++i) {
       if (evt.target === buttonEls[i]) { continue; }
       buttonEls[i].setAttribute('material', 'color', 'white');
@@ -44,24 +32,16 @@ AFRAME.registerComponent('highlight', {
   },
 
   onMouseLeave: function (evt) {
-    // Jika tombol yang diklik, jangan ubah scale
-    if (this.selectedButton === evt.target) {
-      return;
-    }
-
+    if (this.el.is('clicked')) { return; }
     evt.target.setAttribute('material', 'color', 'white');
-    evt.target.emit('mouseleave'); // Kembalikan ke scale semula
   },
 
   reset: function () {
     var buttonEls = this.buttonEls;
-    this.el.removeState('clicked');
-
     for (var i = 0; i < buttonEls.length; ++i) {
+      this.el.removeState('clicked');
+      buttonEls[i].play();
       buttonEls[i].emit('mouseleave');
-      buttonEls[i].setAttribute('material', 'color', 'white');
     }
-
-    this.selectedButton = null;
   }
-}); 
+});

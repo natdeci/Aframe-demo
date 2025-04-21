@@ -105,6 +105,37 @@
             <video id="bkkbn_vid" src="assets/video.mp4" preload="auto" playsinline webkit-playsinline
                 crossorigin="anonymous"></video>
 
+            <a-asset-item id="messageText" src="message.html"></a-asset-item>
+
+            <img id="kazetachinu" src="https://cdn.aframe.io/examples/ui/kazetachinu.jpg" crossorigin="anonymous"/>
+            <img id="kazetachinuPoster" src="https://cdn.aframe.io/examples/ui/kazetachinuPoster.jpg" crossorigin="anonymous"/>
+
+            <img id="ponyo" src="https://cdn.aframe.io/examples/ui/ponyo.jpg" crossorigin="anonymous"/>
+            <img id="ponyoPoster" src="https://cdn.aframe.io/examples/ui/ponyoPoster.jpg" crossorigin="anonymous"/>
+
+            <img id="karigurashi" src="https://cdn.aframe.io/examples/ui/karigurashi.jpg" crossorigin="anonymous"/>
+            <img id="karigurashiPoster" src="https://cdn.aframe.io/examples/ui/karigurashiPoster.jpg" crossorigin="anonymous"/>
+            <a-mixin
+                id="frame"
+                geometry="primitive: plane; width: 0.5783552; height: 0.8192"
+                material="color: white; shader: flat"
+                animation__scale="property: scale; to: 0.3 0.3 0.3; dur: 200; startEvents: mouseenter"
+                animation__scale_reverse="property: scale; to: 0.25 0.25 0.25; dur: 200; startEvents: mouseleave"
+            ></a-mixin>
+            <a-mixin
+                id="poster"
+                geometry="primitive: plane; width: 0.544768; height: 0.786432"
+                material="color: white; shader: flat"
+                material="shader: flat"
+                position="0 0 0.005"
+            ></a-mixin>
+            <a-mixin
+                id="movieImage"
+                geometry="primitive: plane; width: 1.5; height: 0.81"
+                material="src: #ponyo; shader: flat; transparent: true"
+                position="0 0.495 0.002"
+            ></a-mixin>
+
             <a-asset-item id="officeModel" src="models/meeting_room.glb"></a-asset-item>
             <a-asset-item id="isomatric" src="models/isometric_office.glb"></a-asset-item>
         </a-assets>
@@ -220,7 +251,7 @@
                     });
 
                     // Disable controls
-                    camera_ppt.setAttribute("look-controls", "enabled: false");
+                    // camera_ppt.setAttribute("look-controls", "enabled: false");
                     rig_ppt.setAttribute("movement-controls", "enabled: false");
                     rig_ppt.setAttribute("nipple-controls", "enabled: false");
 
@@ -247,7 +278,7 @@
                     });
 
                     // Disable controls
-                    camera_ppt.setAttribute("look-controls", "enabled: true");
+                    // camera_ppt.setAttribute("look-controls", "enabled: true");
                     rig_ppt.setAttribute("movement-controls", "enabled: true");
                     rig_ppt.setAttribute("nipple-controls", "enabled: true");
 
@@ -279,6 +310,248 @@
                     height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
             </a-entity>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const feedback = document.querySelector("#feedback");
+                    const monitor_health = document.querySelector("#monitorHealth")
+                    const camera_quiz = document.querySelector("#cam");
+                    const rig_quiz = document.querySelector("#rig");
+                    const btnBack_quiz = document.querySelector("#backBtn2")
+    
+                    const rigZoomPos_quiz = "-2.553 1.100 -1.930";
+                    const camZoomRot_quiz = "0 -0.917 0";
+    
+                    const rigInitPos_quiz = "-2.487 1.250 -1.896";
+                    const camInitRot_quiz = "-1.031 -1.146 0";
+    
+                    // Pilihan
+                    const optA = document.querySelector("#optA");
+                    const optB = document.querySelector("#optB");
+                    const optC = document.querySelector("#optC");
+    
+                    optA.addEventListener("click", () => {
+                        feedback.setAttribute("value", "❌ Salah! Coba lagi.");
+                        feedback.setAttribute("color", "#FF0000");
+                        feedback.setAttribute("visible", true);
+                    });
+    
+                    optB.addEventListener("click", () => {
+                        feedback.setAttribute(
+                            "value",
+                            "✅ Benar! Dibentuk pada tahun 1957"
+                        );
+                        feedback.setAttribute("color", "#00AA00");
+                        feedback.setAttribute("visible", true);
+                    });
+    
+                    optC.addEventListener("click", () => {
+                        feedback.setAttribute("value", "❌ Salah! Coba lagi.");
+                        feedback.setAttribute("color", "#FF0000");
+                        feedback.setAttribute("visible", true);
+                    });
+    
+                    monitor_health.addEventListener("click", () => {
+                        rig_quiz.removeAttribute("animation__pos");
+                        camera_quiz.removeAttribute("animation__rot");
+    
+                        rig_quiz.setAttribute("animation__pos", {
+                            property: "position",
+                            to: rigZoomPos_quiz,
+                            dur: 1000,
+                            easing: "easeInOutQuad"
+                        });
+    
+                        cam.setAttribute("animation__rot", {
+                            property: "rotation",
+                            to: camZoomRot_quiz,
+                            dur: 1000,
+                            easing: "easeInOutQuad"
+                        });
+    
+                        // camera_quiz.setAttribute("look-controls", "enabled: false");
+                        rig_quiz.setAttribute("movement-controls", "enabled: false");
+                        rig_quiz.setAttribute("nipple-controls", "enabled: false");
+    
+                        btnBack_quiz.setAttribute("visible", true)
+                    });
+    
+                    btnBack_quiz.addEventListener("click", () => {
+                        rig_quiz.removeAttribute("animation__pos");
+                        camera_quiz.removeAttribute("animation__rot");
+    
+                        rig_quiz.setAttribute("animation__pos", {
+                            property: "position",
+                            to: rigInitPos_quiz,
+                            dur: 1000,
+                            easing: "easeInOutQuad"
+                        });
+    
+                        cam.setAttribute("animation__rot", {
+                            property: "rotation",
+                            to: camInitRot_quiz,
+                            dur: 1000,
+                            easing: "easeInOutQuad"
+                        });
+    
+                        // camera_quiz.setAttribute("look-controls", "enabled: true");
+                        rig_quiz.setAttribute("movement-controls", "enabled: true");
+                        rig_quiz.setAttribute("nipple-controls", "enabled: true");
+    
+                        btnBack_quiz.setAttribute("visible", false)
+                    });
+                });
+            </script>
+
+            <a-entity id="deskReception">
+                <a-image id="monitorReception" src="#reception1" position="3.714 0.890 -1.773" rotation="0.028 129.450 0.000"
+                    scale="0.540 0.320 1" class="raycastable"></a-image>
+
+                <a-text value="MENU" position="3.714 1.015 -1.773" rotation="0.028 129.450 0.000" width="0.7" align="center"
+                    id="menuTitle" class="raycastable" color="#007BFF"></a-text>
+
+                <a-text value="1. News" position="3.825 0.962 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
+                    id="menu1" class="raycastable" color="#007BFF"></a-text>
+
+                <a-text value="2. Conference" position="3.823 0.900 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
+                    id="menu2" class="raycastable" color="#007BFF"></a-text>
+
+                <a-text value="3. Info" position="3.823 0.838 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
+                    id="menu3" class="raycastable" color="#007BFF"></a-text>
+
+                <a-text value="4. Quiz" position="3.823 0.776 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
+                    id="menu4" class="raycastable" color="#007BFF"></a-text>
+
+                <a-image id="backButtonReception" src="#left" position="3.864 0.890 -1.593" rotation="0.028 129.450 0.000" width="0.2"
+                    height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
+            </a-entity>
+
+            <script>
+                const camera_reception = document.querySelector("#cam");
+                const rig_reception = document.querySelector("#rig");
+                const monitor_reception = document.querySelector('#monitorReception')
+                const btnBack_reception = document.querySelector("#backButtonReception");
+                const menu_1 = document.querySelector("#menu1")
+                const menu_2 = document.querySelector("#menu2")
+                const menu_3 = document.querySelector("#menu3")
+                const menu_4 = document.querySelector("#menu4")
+    
+                const rigZoomPos_reception = "3.987 0.890 -1.981";
+                const camZoomRot_reception = "-0.802 128.45";
+    
+                const rigInitPos_reception = "4.192 1.250 -2.235";
+                const camInitRot_reception = "0.757 90.298 0";
+
+                menu_1.addEventListener("click", () => {
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+                    rig_reception.setAttribute("position", "1.211 1.25 2.202");
+                    camera_reception.setAttribute("rotation", "0 0 0");
+
+                    btnBack_reception.setAttribute("visible", false);
+                });
+
+                menu_2.addEventListener("click", () => {
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+                    rig_reception.setAttribute("position", "-3.560 1.250 2.277");
+                    camera_reception.setAttribute("rotation", "0.229 61.879 0.000");
+
+                    btnBack_reception.setAttribute("visible", false);
+                });
+
+                menu_3.addEventListener("click", () => {
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+                    rig_reception.setAttribute("position", "0.425 1.250 -1.887"); 
+                    camera_reception.setAttribute("rotation", "-2.750 8.136 0");
+
+                    btnBack_reception.setAttribute("visible", false);
+                });
+
+                menu_4.addEventListener("click", () => {
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+                    rig_reception.setAttribute("position", "-2.487 1.250 -1.896");
+                    camera_reception.setAttribute("rotation", "-1.031 -1.146 0");
+
+                    btnBack_reception.setAttribute("visible", false);
+                });
+    
+                monitor_reception.addEventListener("click", () => {
+                    // Hapus animasi sebelumnya
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    // Animasi zoom in
+                    rig_reception.setAttribute("animation__pos", {
+                        property: "position",
+                        to: rigZoomPos_reception,
+                        dur: 1000,
+                        easing: "easeInOutQuad"
+                    });
+
+                    camera_reception.setAttribute("animation__rot", {
+                        property: "rotation",
+                        to: camZoomRot_reception,
+                        dur: 1000,
+                        easing: "easeInOutQuad"
+                    });
+
+                    // Disable controls
+                    // camera_reception.setAttribute("look-controls", "enabled: false");
+                    rig_reception.setAttribute("movement-controls", "enabled: false");
+                    rig_reception.setAttribute("nipple-controls", "enabled: false");
+
+                    // Tampilkan tombol back
+                    btnBack_reception.setAttribute("visible", true);
+                });
+    
+                btnBack_reception.addEventListener("click", () => {
+                    // Hapus animasi sebelumnya
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+    
+                    // Animasi kembali ke awal
+                    rig_reception.setAttribute("animation__pos", {
+                        property: "position",
+                        to: rigInitPos_reception,
+                        dur: 1000,
+                        easing: "easeInOutQuad"
+                    });
+    
+                    camera_reception.setAttribute("animation__rot", {
+                        property: "rotation",
+                        to: camInitRot_reception,
+                        dur: 1000,
+                        easing: "easeInOutQuad"
+                    });
+    
+                    // Aktifkan kontrol
+                    // camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+    
+                    // Sembunyikan tombol kembali
+                    btnBack_reception.setAttribute("visible", false);
+                });
+            </script>
+
             <a-image id="monitor3" src="#event1" position="-2.543 1.1 -3.668" rotation="0 -84.710 0"
                 scale="0.540 0.320 1"></a-image>
 
@@ -288,98 +561,6 @@
             <a-image id="monitor5" src="#birth1" position="0.394 1.100 -3.612" rotation="0 -97.874 0"
                 scale="0.540 0.320 1"></a-image>
         </a-entity>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const feedback = document.querySelector("#feedback");
-                const monitor_health = document.querySelector("#monitorHealth")
-                const camera_quiz = document.querySelector("#cam");
-                const rig_quiz = document.querySelector("#rig");
-                const btnBack_quiz = document.querySelector("#backBtn2")
-
-                const rigZoomPos_quiz = "-2.553 1.100 -1.930";
-                const camZoomRot_quiz = "0 -0.917 0";
-
-                const rigInitPos_quiz = "-2.487 1.250 -1.896";
-                const camInitRot_quiz = "-1.031 -1.146 0";
-
-                // Pilihan
-                const optA = document.querySelector("#optA");
-                const optB = document.querySelector("#optB");
-                const optC = document.querySelector("#optC");
-
-                optA.addEventListener("click", () => {
-                    feedback.setAttribute("value", "❌ Salah! Coba lagi.");
-                    feedback.setAttribute("color", "#FF0000");
-                    feedback.setAttribute("visible", true);
-                });
-
-                optB.addEventListener("click", () => {
-                    feedback.setAttribute(
-                        "value",
-                        "✅ Benar! Dibentuk pada tahun 1957"
-                    );
-                    feedback.setAttribute("color", "#00AA00");
-                    feedback.setAttribute("visible", true);
-                });
-
-                optC.addEventListener("click", () => {
-                    feedback.setAttribute("value", "❌ Salah! Coba lagi.");
-                    feedback.setAttribute("color", "#FF0000");
-                    feedback.setAttribute("visible", true);
-                });
-
-                monitor_health.addEventListener("click", () => {
-                    rig_quiz.removeAttribute("animation__pos");
-                    camera_quiz.removeAttribute("animation__rot");
-
-                    rig_quiz.setAttribute("animation__pos", {
-                        property: "position",
-                        to: rigZoomPos_quiz,
-                        dur: 1000,
-                        easing: "easeInOutQuad"
-                    });
-
-                    cam.setAttribute("animation__rot", {
-                        property: "rotation",
-                        to: camZoomRot_quiz,
-                        dur: 1000,
-                        easing: "easeInOutQuad"
-                    });
-
-                    camera_quiz.setAttribute("look-controls", "enabled: false");
-                    rig_quiz.setAttribute("movement-controls", "enabled: false");
-                    rig_quiz.setAttribute("nipple-controls", "enabled: false");
-
-                    btnBack_quiz.setAttribute("visible", true)
-                });
-
-                btnBack_quiz.addEventListener("click", () => {
-                    rig_quiz.removeAttribute("animation__pos");
-                    camera_quiz.removeAttribute("animation__rot");
-
-                    rig_quiz.setAttribute("animation__pos", {
-                        property: "position",
-                        to: rigInitPos_quiz,
-                        dur: 1000,
-                        easing: "easeInOutQuad"
-                    });
-
-                    cam.setAttribute("animation__rot", {
-                        property: "rotation",
-                        to: camInitRot_quiz,
-                        dur: 1000,
-                        easing: "easeInOutQuad"
-                    });
-
-                    camera_quiz.setAttribute("look-controls", "enabled: true");
-                    rig_quiz.setAttribute("movement-controls", "enabled: true");
-                    rig_quiz.setAttribute("nipple-controls", "enabled: true");
-
-                    btnBack_quiz.setAttribute("visible", false)
-                });
-            });
-        </script>
 
         <a-assets>
             <img src="assets/bkkbn/1.jpg" alt="" id="p1" />
@@ -456,7 +637,7 @@
                     });
 
                     // Disable controls
-                    camera.setAttribute("look-controls", "enabled: false");
+                    // camera.setAttribute("look-controls", "enabled: false");
                     rig.setAttribute("movement-controls", "enabled: false");
                     rig.setAttribute("nipple-controls", "enabled: false");
 
@@ -486,7 +667,7 @@
                 });
 
                 // Aktifkan kontrol
-                camera.setAttribute("look-controls", "enabled: true");
+                // camera.setAttribute("look-controls", "enabled: true");
                 rig.setAttribute("movement-controls", "enabled: true");
                 rig.setAttribute("nipple-controls", "enabled: true");
 
@@ -532,6 +713,45 @@
                 });
             });
         </script>
+
+        <a-entity id="Corner Room">
+            <a-entity id="menu" highlight>
+                <a-entity id="karigurashiButton" position="-3.127 1.103 -6.132" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+                    <a-entity material="src: #karigurashiPoster;" mixin="poster"></a-entity>
+                </a-entity>
+        
+                <a-entity id="kazetachinuButton" position="-3.282 1.103 -6.086" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+                    <a-entity material="src: #kazetachinuPoster" mixin="poster"></a-entity>
+                </a-entity>
+        
+                <a-entity id="ponyoButton" position="-3.439 1.103 -6.038" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+                    <a-entity material="src: #ponyoPoster" mixin="poster"></a-entity>
+                </a-entity>
+            </a-entity>
+        
+                <!-- Info panel of the selected movie. -->
+            <a-entity
+                id="infoPanel"
+                position="-3.916 1.237 -6.152"
+                rotation = "0 145 0"
+                info-panel
+                visible="false"
+                class="raycastable">
+                <a-plane width="0.75" height="0.6" material="color: #333333; shader: flat;"></a-plane>
+
+                <a-entity scale="0.5 0.4 0.4">
+                    <a-entity id="ponyoMovieImage" mixin="movieImage" material="src: #ponyo" visible="false"></a-entity>
+                <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu" visible="false"></a-entity>
+                <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi" visible="false"></a-entity>
+                <a-entity id="movieTitle"
+                    position="-0.68 -0.1 0"
+                    text="shader: msdf; anchor: left; width: 1.5; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Ponyo (2003)"></a-entity>
+                <a-entity id="movieDescription"
+                    position="-0.68 -0.2 0"
+                    text="baseline: top; shader: msdf; anchor: left; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></a-entity>
+                </a-entity>
+            </a-entity>
+        </a-entity>
 
         <a-entity position="5.000 1.06 -1.97" geometry="primitive: box; width: 0.1; height: 2.2; depth: 10"
             material="color: #75A166;"></a-entity>
