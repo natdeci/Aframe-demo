@@ -14,6 +14,149 @@
     <script src="js/joystick.min.js"></script>
     <script src="js/info-panel.js"></script>
     <script src="js/highlight.js"></script>
+
+    <script>
+        // Consolidated JS: Run after DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", () => {
+            // Quiz System
+            initQuizSystem();
+            
+            // Add quiz zoom functionality
+            initQuizZoom();
+        });
+
+        // Initialize quiz zoom functionality
+        function initQuizZoom() {
+            const quizScreen = document.querySelector("#quizMainImage");
+            const quizBackBtn = document.querySelector("#quizBackBtn");
+            const quizCamera = document.querySelector("#cam");
+            const quizRig = document .querySelector("#rig")
+            const quizOptionsContainer = document.querySelector("#quizOptionsContainer");
+
+            // Define positions for quiz view
+            const initialPosition = "-2.436 1.25 -1.741";
+            const initialRotation = "0 -8.482 0";
+            const quizZoomPosition = "-2.539 1.100 -1.990"; // Positioned in front of the quiz
+            const quizZoomRotation = "0 -0.520 0"; // Facing the quiz directly
+
+            quizScreen.addEventListener("click", () => {
+                // Remove previous animations
+                quizCamera.removeAttribute("animation__pos");
+                quizCamera.removeAttribute("animation__rot");
+
+                // Set rotation directly toward target
+                quizCamera.setAttribute("rotation", quizZoomRotation);
+
+                // Animate position (zoom in)
+                quizRig.setAttribute("animation__pos", {
+                    property: "position",
+                    to: quizZoomPosition,
+                    dur: 1000,
+                    easing: "easeInOutQuad"
+                });
+
+                // Disable manual controls
+                quizRig.setAttribute("movement-controls", "enabled: false");
+                quizRig.setAttribute("nipple-controls", "enabled: false");
+
+                // Show back button for quiz
+                quizBackBtn.setAttribute("visible", true);
+                
+                // Ensure quiz options are fully interactive when zoomed in
+                const options = document.querySelectorAll(".quizOption");
+                options.forEach(option => {
+                    option.setAttribute("material", "opacity", 0.001);
+                });
+            });
+
+            quizBackBtn.addEventListener("click", () => {
+                // Remove previous animations
+                quizCamera.removeAttribute("animation__pos");
+                quizCamera.removeAttribute("animation__rot");
+
+                // Return to initial position and rotation
+                quizRig.setAttribute("animation__pos", {
+                    property: "position",
+                    to: initialPosition,
+                    dur: 1000,
+                    easing: "easeInOutQuad"
+                });
+
+                quizCamera.setAttribute("animation__rot", {
+                    property: "rotation",
+                    to: initialRotation,
+                    dur: 1000,
+                    easing: "easeInOutQuad"
+                });
+
+                // Re-enable controls
+                quizRig.setAttribute("movement-controls", "enabled: true");
+                quizRig.setAttribute("nipple-controls", "enabled: true");
+
+                // Hide back button
+                quizBackBtn.setAttribute("visible", false);
+                
+                // Reset quiz feedback when going back to normal view
+                const feedback = document.querySelector("#feedback");
+                feedback.setAttribute("visible", false);
+            });
+        }
+
+        // Initialize quiz functionality
+        function initQuizSystem() {
+            const feedback = document.querySelector("#feedback");
+            const planeA = document.querySelector("#planeA");
+            const planeB = document.querySelector("#planeB");
+            const planeC = document.querySelector("#planeC");
+            const planeD = document.querySelector("#planeD");
+            
+            // Store all quiz options for easy access
+            const quizOptions = [planeA, planeB, planeC, planeD];
+
+            // Add click events with improved feedback
+            planeA.addEventListener("click", () => {
+                feedback.setAttribute("value", "A Salah! Coba lagi.");
+                feedback.setAttribute("color", "#FF0000");
+                feedback.setAttribute("visible", true);
+            });
+
+            planeB.addEventListener("click", () => {
+                feedback.setAttribute("value", "B Benar!");
+                feedback.setAttribute("color", "#00AA00");
+                feedback.setAttribute("visible", true);
+            });
+
+            planeC.addEventListener("click", () => {
+                feedback.setAttribute("value", "C Salah! Coba lagi.");
+                feedback.setAttribute("color", "#FF0000");
+                feedback.setAttribute("visible", true);
+            });
+
+            planeD.addEventListener("click", () => {
+                feedback.setAttribute("value", "D Salah! Coba lagi.");
+                feedback.setAttribute("color", "#FF0000");
+                feedback.setAttribute("visible", true);
+            });
+
+            // Enhanced hover effect with more obvious visual feedback
+            function addHoverEffect(plane) {
+                plane.addEventListener("mouseenter", () => {
+                    plane.setAttribute("material", "color: #cfd8dc; opacity: 0.5; transparent: true");
+                });
+                plane.addEventListener("mouseleave", () => {
+                    plane.setAttribute("material", "color: transparent; opacity: 0.001; transparent: true");
+                });
+            }
+            
+            // Apply hover effects to all quiz options
+            quizOptions.forEach(addHoverEffect);
+            
+            // Add class for easy selection
+            quizOptions.forEach(option => {
+                option.classList.add("quizOption");
+            });
+        }
+    </script>
 </head>
 
 <body>
@@ -104,6 +247,9 @@
             <img src="assets/play-pause.png" alt="" id="playpause" />
             <video id="bkkbn_vid" src="assets/video.mp4" preload="auto" playsinline webkit-playsinline
                 crossorigin="anonymous"></video>
+
+            <img src="assets/Menu.png" alt="" id ="menuScreen">
+            <img src="assets/quiz/Quiz 1.png" alt="" id ="quiz1">
 
             <a-asset-item id="messageText" src="message.html"></a-asset-item>
 
@@ -286,28 +432,32 @@
                 });
             </script>
 
-            <a-entity id="monitor2">
-                <a-image id="monitorHealth" src="#health1" position="-2.539 1.100 -2.290" rotation="0 -0.520 0"
-                    scale="0.540 0.320 1" class="raycastable"></a-image>
-                <a-text value="Tahun dibentuknya BKKBN?" position="-2.792 1.220 -2.290" rotation="0 -0.520 0"
-                    width="0.7" color="#222" align="left"></a-text>
+            <!-- Quiz Panel -->
+            <a-entity id="monitor2" class="raycastable">
+                <!-- Main quiz image (clickable for zoom) -->
+                <a-image id="quizMainImage" src="#quiz1" position="-2.539 1.100 -2.290" rotation="0 -0.520 0"
+                    scale="0.530 0.310 1" class="raycastable"></a-image>
 
-                <!-- Pilihan Jawaban -->
-                <a-text value="A. 1945" position="-2.773 1.172 -2.290" rotation="0 -0.520 0" width="0.7" align="left"
-                    id="optA" class="raycastable" color="#007BFF"></a-text>
+                <!-- Quiz Options Container -->
+                <a-entity id="quizOptionsContainer">
+                    <!-- Clickable planes with improved visibility -->
+                    <a-plane id="planeA" position="-2.538 1.112 -2.287" rotation="0 -0.520 0" width="0.5" height="0.05"
+                        material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                    <a-plane id="planeB" position="-2.540 1.069 -2.287" rotation="0 -0.520 0" width="0.5" height="0.05"
+                        material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                    <a-plane id="planeC" position="-2.542 1.025 -2.287" rotation="0 -0.520 0" width="0.5" height="0.05"
+                        material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                    <a-plane id="planeD" position="-2.542 0.981 -2.287" rotation="0 -0.520 0" width="0.5" height="0.05"
+                        material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                </a-entity>
 
-                <a-text value="B. 1957" position="-2.773 1.118 -2.290" rotation="0 -0.520 0" width="0.7" align="left"
-                    id="optB" class="raycastable" color="#007BFF"></a-text>
+                <!-- Back Button for Quiz (initially hidden) -->
+                <a-image id="quizBackBtn" src="#left" position="-2.851 1.231 -2.295" width="0.2" height="0.2"
+                    class="raycastable" scale="0.200 0.200 1" rotation="0 -0.520 0" visible="false"></a-image>
 
-                <a-text value="C. 2004" position="-2.773 1.066 -2.290" rotation="0 -0.520 0" width="0.7" align="left"
-                    id="optC" class="raycastable" color="#007BFF"></a-text>
-
-                <!-- Feedback -->
-                <a-text value="" id="feedback" position="-2.785 1.012 -2.290" width="0.690" align="left" color="#000"
+                <!-- Quiz Feedback -->
+                <a-text value="" id="feedback" position="-2.294 1.229 -2.288" width="0.350" align="right" color="#000"
                     rotation="0 -0.520 0" visible="false"></a-text>
-
-                <a-image id="backBtn2" src="#left" position="-2.790 0.975 -2.291" rotation="0 -0.520 0" width="0.2"
-                    height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
             </a-entity>
 
             <script>
@@ -403,25 +553,28 @@
             </script>
 
             <a-entity id="deskReception">
-                <a-image id="monitorReception" src="#reception1" position="3.714 0.890 -1.773" rotation="0.028 129.450 0.000"
+                <a-image id="monitorReception" src="#menuScreen" position="3.714 0.890 -1.773" rotation="0.028 129.450 0.000"
                     scale="0.540 0.320 1" class="raycastable"></a-image>
 
-                <a-text value="MENU" position="3.714 1.015 -1.773" rotation="0.028 129.450 0.000" width="0.7" align="center"
-                    id="menuTitle" class="raycastable" color="#007BFF"></a-text>
+                <a-plane id="menuPlane1" position="3.821 0.914 -1.644" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-text value="1. News" position="3.825 0.962 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
-                    id="menu1" class="raycastable" color="#007BFF"></a-text>
+                <a-plane id="menuPlane2" position="3.713 0.914 -1.775" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-text value="2. Conference" position="3.823 0.900 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
-                    id="menu2" class="raycastable" color="#007BFF"></a-text>
+                <a-plane id="menuPlane3" position="3.609 0.914 -1.901" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-text value="3. Info" position="3.823 0.838 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
-                    id="menu3" class="raycastable" color="#007BFF"></a-text>
+                <a-plane id="menuPlane4" position="3.821 0.834 -1.644" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-text value="4. Quiz" position="3.823 0.776 -1.639" rotation="0.028 129.450 0.000" width="0.7" align="left"
-                    id="menu4" class="raycastable" color="#007BFF"></a-text>
+                <a-plane id="menuPlane5" position="3.713 0.834 -1.775" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-image id="backButtonReception" src="#left" position="3.864 0.890 -1.593" rotation="0.028 129.450 0.000" width="0.2"
+                <a-plane id="menuPlane6" position="3.609 0.834 -1.901" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
+                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+
+                <a-image id="backButtonReception" src="#left" position="3.864 0.760 -1.593" rotation="0.028 129.450 0.000" width="0.2"
                     height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
             </a-entity>
 
@@ -430,10 +583,25 @@
                 const rig_reception = document.querySelector("#rig");
                 const monitor_reception = document.querySelector('#monitorReception')
                 const btnBack_reception = document.querySelector("#backButtonReception");
-                const menu_1 = document.querySelector("#menu1")
-                const menu_2 = document.querySelector("#menu2")
-                const menu_3 = document.querySelector("#menu3")
-                const menu_4 = document.querySelector("#menu4")
+                const menuPlane_1 = document.querySelector("#menuPlane1")
+                const menuPlane_2 = document.querySelector("#menuPlane2")
+                const menuPlane_3 = document.querySelector("#menuPlane3")
+                const menuPlane_4 = document.querySelector("#menuPlane4")
+                const menuPlane_5 = document.querySelector("#menuPlane5")
+                const menuPlane_6 = document.querySelector("#menuPlane6")
+
+                const menuPlanes = [menuPlane_1, menuPlane_2, menuPlane_3, menuPlane_4, menuPlane_5, menuPlane_6];
+
+                function addHoverEffectMenu(plane) {
+                    plane.addEventListener("mouseenter", () => {
+                        plane.setAttribute("material", "color: #cfd8dc; opacity: 0.5; transparent: true");
+                    });
+                    plane.addEventListener("mouseleave", () => {
+                        plane.setAttribute("material", "color: transparent; opacity: 0.001; transparent: true");
+                    });
+                }
+
+                menuPlanes.forEach(addHoverEffectMenu);
     
                 const rigZoomPos_reception = "3.987 0.890 -1.981";
                 const camZoomRot_reception = "-0.802 128.45";
@@ -441,7 +609,7 @@
                 const rigInitPos_reception = "4.192 1.250 -2.235";
                 const camInitRot_reception = "0.757 90.298 0";
 
-                menu_1.addEventListener("click", () => {
+                menuPlane_1.addEventListener("click", () => {
                     rig_reception.removeAttribute("animation__pos");
                     camera_reception.removeAttribute("animation__rot");
 
@@ -449,12 +617,11 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "1.211 1.25 2.202");
-                    camera_reception.setAttribute("rotation", "0 0 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
 
-                menu_2.addEventListener("click", () => {
+                menuPlane_2.addEventListener("click", () => {
                     rig_reception.removeAttribute("animation__pos");
                     camera_reception.removeAttribute("animation__rot");
 
@@ -462,12 +629,11 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "-3.560 1.250 2.277");
-                    camera_reception.setAttribute("rotation", "0.229 61.879 0.000");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
 
-                menu_3.addEventListener("click", () => {
+                menuPlane_3.addEventListener("click", () => {
                     rig_reception.removeAttribute("animation__pos");
                     camera_reception.removeAttribute("animation__rot");
 
@@ -475,22 +641,36 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "0.425 1.250 -1.887"); 
-                    camera_reception.setAttribute("rotation", "-2.750 8.136 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
 
-                menu_4.addEventListener("click", () => {
+                menuPlane_4.addEventListener("click", () => {
                     rig_reception.removeAttribute("animation__pos");
                     camera_reception.removeAttribute("animation__rot");
 
                     camera_reception.setAttribute("look-controls", "enabled: true");
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
-                    rig_reception.setAttribute("position", "-2.487 1.250 -1.896");
-                    camera_reception.setAttribute("rotation", "-1.031 -1.146 0");
+                    rig_reception.setAttribute("position", "-2.436 1.25 -1.741");
 
                     btnBack_reception.setAttribute("visible", false);
+                });
+
+                menuPlane_5.addEventListener("click", () => {
+                    rig_reception.removeAttribute("animation__pos");
+                    camera_reception.removeAttribute("animation__rot");
+
+                    camera_reception.setAttribute("look-controls", "enabled: true");
+                    rig_reception.setAttribute("movement-controls", "enabled: true");
+                    rig_reception.setAttribute("nipple-controls", "enabled: true");
+                    rig_reception.setAttribute("position", "-3.268 1.250 -6.585");
+
+                    btnBack_reception.setAttribute("visible", false);
+                });
+
+                menuPlane_6.addEventListener("click", () => {
+                    
                 });
     
                 monitor_reception.addEventListener("click", () => {
