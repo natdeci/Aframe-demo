@@ -36,7 +36,7 @@
             // Define positions for quiz view
             const initialPosition = "-2.436 1.25 -1.741";
             const initialRotation = "0 -8.482 0";
-            const quizZoomPosition = "-2.539 1.100 -1.990"; // Positioned in front of the quiz
+            const quizZoomPosition = "-2.539 1.100 -1.894"; // Positioned in front of the quiz
             const quizZoomRotation = "0 -0.520 0"; // Facing the quiz directly
 
             quizScreen.addEventListener("click", () => {
@@ -124,6 +124,7 @@
                 feedback.setAttribute("value", "B Benar!");
                 feedback.setAttribute("color", "#00AA00");
                 feedback.setAttribute("visible", true);
+                planeB.setAttribute("color", "#00AA00")
             });
 
             planeC.addEventListener("click", () => {
@@ -477,98 +478,6 @@
                 <a-text value="" id="feedback" position="-2.294 1.229 -2.288" width="0.350" align="right" color="#000"
                     rotation="0 -0.520 0" visible="false"></a-text>
             </a-entity>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const feedback = document.querySelector("#feedback");
-                    const monitor_health = document.querySelector("#monitorHealth")
-                    const camera_quiz = document.querySelector("#cam");
-                    const rig_quiz = document.querySelector("#rig");
-                    const btnBack_quiz = document.querySelector("#backBtn2")
-    
-                    const rigZoomPos_quiz = "-2.553 1.100 -1.930";
-                    const camZoomRot_quiz = "0 -0.917 0";
-    
-                    const rigInitPos_quiz = "-2.487 1.250 -1.896";
-                    const camInitRot_quiz = "-1.031 -1.146 0";
-    
-                    // Pilihan
-                    const optA = document.querySelector("#optA");
-                    const optB = document.querySelector("#optB");
-                    const optC = document.querySelector("#optC");
-    
-                    optA.addEventListener("click", () => {
-                        feedback.setAttribute("value", "❌ Salah! Coba lagi.");
-                        feedback.setAttribute("color", "#FF0000");
-                        feedback.setAttribute("visible", true);
-                    });
-    
-                    optB.addEventListener("click", () => {
-                        feedback.setAttribute(
-                            "value",
-                            "✅ Benar! Dibentuk pada tahun 1957"
-                        );
-                        feedback.setAttribute("color", "#00AA00");
-                        feedback.setAttribute("visible", true);
-                    });
-    
-                    optC.addEventListener("click", () => {
-                        feedback.setAttribute("value", "❌ Salah! Coba lagi.");
-                        feedback.setAttribute("color", "#FF0000");
-                        feedback.setAttribute("visible", true);
-                    });
-    
-                    monitor_health.addEventListener("click", () => {
-                        rig_quiz.removeAttribute("animation__pos");
-                        camera_quiz.removeAttribute("animation__rot");
-    
-                        rig_quiz.setAttribute("animation__pos", {
-                            property: "position",
-                            to: rigZoomPos_quiz,
-                            dur: 1000,
-                            easing: "easeInOutQuad"
-                        });
-    
-                        cam.setAttribute("animation__rot", {
-                            property: "rotation",
-                            to: camZoomRot_quiz,
-                            dur: 1000,
-                            easing: "easeInOutQuad"
-                        });
-    
-                        // camera_quiz.setAttribute("look-controls", "enabled: false");
-                        rig_quiz.setAttribute("movement-controls", "enabled: false");
-                        rig_quiz.setAttribute("nipple-controls", "enabled: false");
-    
-                        btnBack_quiz.setAttribute("visible", true)
-                    });
-    
-                    btnBack_quiz.addEventListener("click", () => {
-                        rig_quiz.removeAttribute("animation__pos");
-                        camera_quiz.removeAttribute("animation__rot");
-    
-                        rig_quiz.setAttribute("animation__pos", {
-                            property: "position",
-                            to: rigInitPos_quiz,
-                            dur: 1000,
-                            easing: "easeInOutQuad"
-                        });
-    
-                        cam.setAttribute("animation__rot", {
-                            property: "rotation",
-                            to: camInitRot_quiz,
-                            dur: 1000,
-                            easing: "easeInOutQuad"
-                        });
-    
-                        // camera_quiz.setAttribute("look-controls", "enabled: true");
-                        rig_quiz.setAttribute("movement-controls", "enabled: true");
-                        rig_quiz.setAttribute("nipple-controls", "enabled: true");
-    
-                        btnBack_quiz.setAttribute("visible", false)
-                    });
-                });
-            </script>
 
             <a-entity id="deskReception">
                 <a-image id="monitorReception" src="#menuScreen" position="3.714 0.890 -1.773" rotation="0.028 129.450 0.000"
