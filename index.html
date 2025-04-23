@@ -166,7 +166,7 @@
         <a-entity gltf-model="#isomatric" position="5.029 0.152 -6.951" scale="1 1 1"></a-entity>
 
         <!-- Camera Rig -->
-        <a-entity id="rig" movement-controls="controls: keyboard,nipple; speed: 0.17" nipple-controls="mode: static; lookJoystickEnabled: false; moveJoystickPosition: right" position="1.211 1.25 2.202">
+        <a-entity id="rig" movement-controls="controls: keyboard,nipple; speed: 0.09" nipple-controls="mode: static" position="1.211 1.25 2.202">
             <a-entity id="cam" camera rotation="0 0 0" look-controls="pointerLockEnabled: false"></a-entity>
         </a-entity>
 
@@ -200,7 +200,7 @@
         </a-entity>
 
         <!-- Play Button -->
-        <a-image id="playButton" src="#right" position="-4.88 0.970 1.507" width="0.25" height="0.25"
+        <a-image id="playButton" src="#right" position="-4.880 1.095 2.201" width="0.25" height="0.25"
             rotation="0 90 0" class="raycastable" scale="0.4 0.4 0.4"
             animation__mouseenter="property: scale; to: 0.5 0.5 0.5; dur: 200; startEvents: mouseenter"
             animation__mouseleave="property: scale; to: 0.4 0.4 0.4; dur: 200; startEvents: mouseleave">
@@ -265,7 +265,7 @@
             <video id="bkkbn_vid" src="assets/video.mp4" preload="auto" playsinline webkit-playsinline
                 crossorigin="anonymous"></video>
 
-            <img src="assets\back-logo.png" alt="" id="backLogoImage">
+            <img src="assets\close-logo.png" alt="" id="backLogoImage">
 
             <img src="assets/Menu.png" alt="" id ="menuScreen">
             <img src="assets/quiz/Quiz 1.png" alt="" id ="quiz1">
@@ -380,7 +380,7 @@
                 <a-image id="nextBtn" src="#right" position="0.740 0.977 -2.316" width="0.2" height="0.2"
                     class="raycastable" scale="0.250 0.250 1" rotation="0 -8.482 0"></a-image>
 
-                <a-image id="backBtn" src="#backLogoImage" position="0.271 1.200 -2.386" rotation="0 -8.482 0" width="0.2"
+                <a-image id="backBtn" src="#backLogoImage" position="0.740 1.230 -2.316" rotation="0 -8.482 0" width="0.2"
                     height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
             </a-entity>
 
@@ -471,7 +471,7 @@
                 </a-entity>
 
                 <!-- Back Button for Quiz (initially hidden) -->
-                <a-image id="quizBackBtn" src="#backLogoImage" position="-2.785 1.187 -2.290" width="0.2" height="0.2"
+                <a-image id="quizBackBtn" src="#backLogoImage" position="-2.303 1.230 -2.287" width="0.2" height="0.2"
                     class="raycastable" scale="0.200 0.200 1" rotation="0 -0.520 0" visible="false"></a-image>
 
                 <!-- Quiz Feedback -->
@@ -501,7 +501,7 @@
                 <a-plane id="menuPlane6" position="3.609 0.834 -1.901" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
                     material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
 
-                <a-image id="backButtonReception" src="#backLogoImage" position="3.864 0.760 -1.593" rotation="0.028 129.450 0.000" width="0.2"
+                <a-image id="backButtonReception" src="#backLogoImage" position="3.558 1.029 -1.964" rotation="0.028 129.450 0.000" width="0.2"
                     height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
             </a-entity>
 
@@ -703,7 +703,7 @@
             <a-image id="popWeb3" src="#web3" position="1.012 1.189 1.741" rotation="0 26.394 0" visible="false"
                 width="0.530" height="0.307" class="raycastable popWeb"></a-image>
 
-            <a-image id="backButton" src="#backLogoImage" position="0.799 1.179 1.847" rotation="0 26.394 0" width="0.2"
+            <a-image id="backButton" src="#backLogoImage" position="1.226 1.305 1.635" rotation="0 26.394 0" width="0.2"
                 height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
 
             <a-image id="monitorleft" src="" position="1.016 1.182 1.738" rotation="0 26.394 0"
