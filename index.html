@@ -15,12 +15,68 @@
     <script src="js/info-panel.js"></script>
     <script src="js/highlight.js"></script>
 
+    <style>
+        #startMenu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .menu-title {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00f;
+        }
+
+        .menu-description {
+            font-size: 1.2em;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .start-button {
+            background-color: #0066ff;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .start-button:hover {
+            background-color: #0044cc;
+        }
+
+        .controls-info {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+
     <script>
         // Consolidated JS: Run after DOM is fully loaded
         document.addEventListener("DOMContentLoaded", () => {
             // Quiz System
             initQuizSystem();
-            
+
             // Add quiz zoom functionality
             initQuizZoom();
         });
@@ -30,7 +86,7 @@
             const quizScreen = document.querySelector("#quizMainImage");
             const quizBackBtn = document.querySelector("#quizBackBtn");
             const quizCamera = document.querySelector("#cam");
-            const quizRig = document .querySelector("#rig")
+            const quizRig = document.querySelector("#rig")
             const quizOptionsContainer = document.querySelector("#quizOptionsContainer");
 
             // Define positions for quiz view
@@ -61,7 +117,7 @@
 
                 // Show back button for quiz
                 quizBackBtn.setAttribute("visible", true);
-                
+
                 // Ensure quiz options are fully interactive when zoomed in
                 const options = document.querySelectorAll(".quizOption");
                 options.forEach(option => {
@@ -95,7 +151,7 @@
 
                 // Hide back button
                 quizBackBtn.setAttribute("visible", false);
-                
+
                 // Reset quiz feedback when going back to normal view
                 const feedback = document.querySelector("#feedback");
                 feedback.setAttribute("visible", false);
@@ -109,7 +165,7 @@
             const planeB = document.querySelector("#planeB");
             const planeC = document.querySelector("#planeC");
             const planeD = document.querySelector("#planeD");
-            
+
             // Store all quiz options for easy access
             const quizOptions = [planeA, planeB, planeC, planeD];
 
@@ -148,10 +204,10 @@
                     plane.setAttribute("material", "color: transparent; opacity: 0.001; transparent: true");
                 });
             }
-            
+
             // Apply hover effects to all quiz options
             quizOptions.forEach(addHoverEffect);
-            
+
             // Add class for easy selection
             quizOptions.forEach(option => {
                 option.classList.add("quizOption");
@@ -161,12 +217,47 @@
 </head>
 
 <body>
+    <div id="startMenu">
+        <h1 class="menu-title">BKKBN VR Experience</h1>
+        <p class="menu-description">Welcome to the BKKBN virtual experience.
+            Explore interactive spaces to learn about family planning, population programs, and family development.</p>
+        <strong>Click Start Experience to begin.</strong>
+        <button class="start-button" onclick="startExperience()">Start Experience</button>
+        <div class="controls-info">
+            <p>Use joystick (mobile) / WASD (desktop) to move.</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to start the VR experience
+        function startExperience() {
+            // Hide the start menu
+            document.getElementById('startMenu').style.display = 'none';
+
+            // Optional: Enter VR mode automatically
+            // Note: Most browsers now require user interaction to enter VR
+            // document.querySelector('a-scene').enterVR();
+        }
+
+        // Optional: Pause the scene until the user starts
+        document.querySelector('a-scene').pause();
+
+        // Resume the scene when user clicks start
+        function startExperience() {
+            document.getElementById('startMenu').style.display = 'none';
+            document.querySelector('a-scene').play();
+        }
+    </script>
+
     <a-scene environment cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .raycastable" joystick>
         <!-- Model -->
         <a-entity gltf-model="#isomatric" position="5.029 0.152 -6.951" scale="1 1 1"></a-entity>
 
         <!-- Camera Rig -->
-        <a-entity id="rig" movement-controls="controls: keyboard,nipple; speed: 0.09" nipple-controls="mode: static; moveJoystickPosition: right; lookJoystickPosition: left" position="1.211 1.25 2.202">
+        <a-entity id="rig" movement-controls="controls: keyboard,nipple; speed: 0.09"
+            nipple-controls="mode: static; moveJoystickPosition: right; lookJoystickPosition: left"
+            position="4.241 1.25 -2.221"
+            rotation="0 130.291 0">
             <a-entity id="cam" camera rotation="0 0 0" look-controls="pointerLockEnabled: false"></a-entity>
         </a-entity>
 
@@ -200,8 +291,8 @@
         </a-entity>
 
         <!-- Play Button -->
-        <a-image id="playButton" src="#right" position="-4.880 1.095 2.201" width="0.25" height="0.25"
-            rotation="0 90 0" class="raycastable" scale="0.4 0.4 0.4"
+        <a-image id="playButton" src="#right" position="-4.880 1.095 2.201" width="0.25" height="0.25" rotation="0 90 0"
+            class="raycastable" scale="0.4 0.4 0.4"
             animation__mouseenter="property: scale; to: 0.5 0.5 0.5; dur: 200; startEvents: mouseenter"
             animation__mouseleave="property: scale; to: 0.4 0.4 0.4; dur: 200; startEvents: mouseleave">
         </a-image>
@@ -267,39 +358,25 @@
 
             <img src="assets\close-logo.png" alt="" id="backLogoImage">
 
-            <img src="assets/Menu.png" alt="" id ="menuScreen">
-            <img src="assets/quiz/Quiz 1.png" alt="" id ="quiz1">
+            <img src="assets/Menu.png" alt="" id="menuScreen">
+            <img src="assets/quiz/Quiz 1.png" alt="" id="quiz1">
 
-            <a-asset-item id="messageText" src="message.html"></a-asset-item>
+            <img id="kazetachinu" src="assets/bkkbn/vs1.png" crossorigin="anonymous" alt="" />
+            <img id="kazetachinuPoster" src="assets/bkkbn/poster1.png" crossorigin="anonymous" alt="" />
 
-            <img id="kazetachinu" src="assets/bkkbn/vs1.png" crossorigin="anonymous"/>
-            <img id="kazetachinuPoster" src="assets/bkkbn/poster1.png" crossorigin="anonymous"/>
+            <img id="ponyo" src="assets/bkkbn/vs2.png" crossorigin="anonymous" alt="" />
+            <img id="ponyoPoster" src="assets/bkkbn/poster2.jpg" crossorigin="anonymous" alt="" />
 
-            <img id="ponyo" src="assets/bkkbn/vs2.png" crossorigin="anonymous"/>
-            <img id="ponyoPoster" src="assets/bkkbn/poster2.jpg" crossorigin="anonymous"/>
-
-            <img id="karigurashi" src="assets/bkkbn/vs3.png" crossorigin="anonymous"/>
-            <img id="karigurashiPoster" src="assets/bkkbn/poster3.png" crossorigin="anonymous"/>
-            <a-mixin
-                id="frame"
-                geometry="primitive: plane; width: 0.5783552; height: 0.8192"
+            <img id="karigurashi" src="assets/bkkbn/vs3.png" crossorigin="anonymous" alt="" />
+            <img id="karigurashiPoster" src="assets/bkkbn/poster3.png" crossorigin="anonymous" alt="" />
+            <a-mixin id="frame" geometry="primitive: plane; width: 0.5783552; height: 0.8192"
                 material="color: white; shader: flat"
                 animation__scale="property: scale; to: 0.3 0.3 0.3; dur: 200; startEvents: mouseenter"
-                animation__scale_reverse="property: scale; to: 0.25 0.25 0.25; dur: 200; startEvents: mouseleave"
-            ></a-mixin>
-            <a-mixin
-                id="poster"
-                geometry="primitive: plane; width: 0.544768; height: 0.786432"
-                material="color: white; shader: flat"
-                material="shader: flat"
-                position="0 0 0.005"
-            ></a-mixin>
-            <a-mixin
-                id="movieImage"
-                geometry="primitive: plane; width: 1.5; height: 0.81"
-                material="src: #ponyo; shader: flat; transparent: true"
-                position="0 0.495 0.002"
-            ></a-mixin>
+                animation__scale_reverse="property: scale; to: 0.25 0.25 0.25; dur: 200; startEvents: mouseleave"></a-mixin>
+            <a-mixin id="poster" geometry="primitive: plane; width: 0.544768; height: 0.786432"
+                material="color: white; shader: flat" material="shader: flat" position="0 0 0.005"></a-mixin>
+            <a-mixin id="movieImage" geometry="primitive: plane; width: 1.5; height: 0.81"
+                material="src: #ponyo; shader: flat; transparent: true" position="0 0.495 0.002"></a-mixin>
 
             <a-asset-item id="officeModel" src="models/meeting_room.glb"></a-asset-item>
             <a-asset-item id="isomatric" src="models/isometric_office.glb"></a-asset-item>
@@ -380,8 +457,9 @@
                 <a-image id="nextBtn" src="#right" position="0.740 0.977 -2.316" width="0.2" height="0.2"
                     class="raycastable" scale="0.250 0.250 1" rotation="0 -8.482 0"></a-image>
 
-                <a-image id="backBtn" src="#backLogoImage" position="0.740 1.230 -2.316" rotation="0 -8.482 0" width="0.2"
-                    height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
+                <a-image id="backBtn" src="#backLogoImage" position="0.740 1.230 -2.316" rotation="0 -8.482 0"
+                    width="0.2" height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable"
+                    visible="false"></a-image>
             </a-entity>
 
             <script>
@@ -480,29 +558,36 @@
             </a-entity>
 
             <a-entity id="deskReception">
-                <a-image id="monitorReception" src="#menuScreen" position="3.714 0.890 -1.773" rotation="0.028 129.450 0.000"
-                    scale="0.540 0.320 1" class="raycastable"></a-image>
+                <a-image id="monitorReception" src="#menuScreen" position="3.714 0.890 -1.773"
+                    rotation="0.028 129.450 0.000" scale="0.540 0.320 1" class="raycastable"></a-image>
 
-                <a-plane id="menuPlane1" position="3.821 0.914 -1.644" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane1" position="3.821 0.914 -1.644" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-plane id="menuPlane2" position="3.713 0.914 -1.775" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane2" position="3.713 0.914 -1.775" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-plane id="menuPlane3" position="3.609 0.914 -1.901" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane3" position="3.609 0.914 -1.901" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-plane id="menuPlane4" position="3.821 0.834 -1.644" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane4" position="3.821 0.834 -1.644" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-plane id="menuPlane5" position="3.713 0.834 -1.775" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane5" position="3.713 0.834 -1.775" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-plane id="menuPlane6" position="3.609 0.834 -1.901" rotation="0.028 129.450 0.000" width="0.12" height="0.05"
-                    material="color: transparent; opacity: 0.001; transparent: true" class="raycastable"></a-plane>
+                <a-plane id="menuPlane6" position="3.609 0.834 -1.901" rotation="0.028 129.450 0.000" width="0.12"
+                    height="0.05" material="color: transparent; opacity: 0.001; transparent: true"
+                    class="raycastable"></a-plane>
 
-                <a-image id="backButtonReception" src="#backLogoImage" position="3.558 1.029 -1.964" rotation="0.028 129.450 0.000" width="0.2"
-                    height="0.2" class="raycastable" scale="0.200 0.200 1" class="clickable" visible="false"></a-image>
+                <a-image id="backButtonReception" src="#backLogoImage" position="3.558 1.029 -1.964"
+                    rotation="0.028 129.450 0.000" width="0.2" height="0.2" class="raycastable" scale="0.200 0.200 1"
+                    class="clickable" visible="false"></a-image>
             </a-entity>
 
             <script>
@@ -529,10 +614,10 @@
                 }
 
                 menuPlanes.forEach(addHoverEffectMenu);
-    
+
                 const rigZoomPos_reception = "3.987 0.890 -1.981";
                 const camZoomRot_reception = "-0.802 128.45";
-    
+
                 const rigInitPos_reception = "4.192 1.250 -2.235";
                 const camInitRot_reception = "0.757 90.298 0";
 
@@ -544,6 +629,7 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "1.211 1.25 2.202");
+                    rig_reception.setAttribute("rotation", "0 0 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
@@ -556,6 +642,7 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "-3.560 1.250 2.277");
+                    rig_reception.setAttribute("rotation", "0 62.567 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
@@ -567,7 +654,8 @@
                     camera_reception.setAttribute("look-controls", "enabled: true");
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
-                    rig_reception.setAttribute("position", "0.425 1.250 -1.887"); 
+                    rig_reception.setAttribute("position", "0.425 1.250 -1.887");
+                    rig_reception.setAttribute("rotation", "0 0 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
@@ -580,6 +668,7 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "-2.436 1.25 -1.741");
+                    rig_reception.setAttribute("rotation", "0 10 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
@@ -592,14 +681,15 @@
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
                     rig_reception.setAttribute("position", "-3.268 1.250 -6.585");
+                    rig_reception.setAttribute("rotation", "0 -211.3 0");
 
                     btnBack_reception.setAttribute("visible", false);
                 });
 
                 menuPlane_6.addEventListener("click", () => {
-                    
+
                 });
-    
+
                 monitor_reception.addEventListener("click", () => {
                     // Hapus animasi sebelumnya
                     rig_reception.removeAttribute("animation__pos");
@@ -628,12 +718,12 @@
                     // Tampilkan tombol back
                     btnBack_reception.setAttribute("visible", true);
                 });
-    
+
                 btnBack_reception.addEventListener("click", () => {
                     // Hapus animasi sebelumnya
                     rig_reception.removeAttribute("animation__pos");
                     camera_reception.removeAttribute("animation__rot");
-    
+
                     // Animasi kembali ke awal
                     rig_reception.setAttribute("animation__pos", {
                         property: "position",
@@ -641,19 +731,19 @@
                         dur: 1000,
                         easing: "easeInOutQuad"
                     });
-    
+
                     camera_reception.setAttribute("animation__rot", {
                         property: "rotation",
                         to: camInitRot_reception,
                         dur: 1000,
                         easing: "easeInOutQuad"
                     });
-    
+
                     // Aktifkan kontrol
                     // camera_reception.setAttribute("look-controls", "enabled: true");
                     rig_reception.setAttribute("movement-controls", "enabled: true");
                     rig_reception.setAttribute("nipple-controls", "enabled: true");
-    
+
                     // Sembunyikan tombol kembali
                     btnBack_reception.setAttribute("visible", false);
                 });
@@ -823,39 +913,37 @@
 
         <a-entity id="Corner Room">
             <a-entity id="menu" highlight>
-                <a-entity id="karigurashiButton" position="-3.127 1.103 -6.132" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+                <a-entity id="karigurashiButton" position="-3.127 1.103 -6.132" rotation="0 -163.2 0"
+                    scale="0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
                     <a-entity material="src: #karigurashiPoster;" mixin="poster"></a-entity>
                 </a-entity>
-        
-                <a-entity id="kazetachinuButton" position="-3.282 1.103 -6.086" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+
+                <a-entity id="kazetachinuButton" position="-3.282 1.103 -6.086" rotation="0 -163.2 0"
+                    scale="0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
                     <a-entity material="src: #kazetachinuPoster" mixin="poster"></a-entity>
                 </a-entity>
-        
-                <a-entity id="ponyoButton" position="-3.439 1.103 -6.038" rotation = "0 -163.2 0" scale = "0.25 0.25 0.25" mixin="frame" class="raycastable menu-button">
+
+                <a-entity id="ponyoButton" position="-3.439 1.103 -6.038" rotation="0 -163.2 0" scale="0.25 0.25 0.25"
+                    mixin="frame" class="raycastable menu-button">
                     <a-entity material="src: #ponyoPoster" mixin="poster"></a-entity>
                 </a-entity>
             </a-entity>
-        
-                <!-- Info panel of the selected movie. -->
-            <a-entity
-                id="infoPanel"
-                position="-3.916 1.237 -6.152"
-                rotation = "0 145 0"
-                info-panel
-                visible="false"
+
+            <!-- Info panel of the selected movie. -->
+            <a-entity id="infoPanel" position="-3.916 1.237 -6.152" rotation="0 145 0" info-panel visible="false"
                 class="raycastable">
                 <a-plane width="0.75" height="0.6" material="color: #333333; shader: flat;"></a-plane>
 
                 <a-entity scale="0.5 0.4 0.4">
                     <a-entity id="ponyoMovieImage" mixin="movieImage" material="src: #ponyo" visible="false"></a-entity>
-                <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu" visible="false"></a-entity>
-                <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi" visible="false"></a-entity>
-                <a-entity id="movieTitle"
-                    position="-0.68 -0.1 0"
-                    text="shader: msdf; anchor: left; width: 1.5; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Ponyo (2003)"></a-entity>
-                <a-entity id="movieDescription"
-                    position="-0.68 -0.2 0"
-                    text="baseline: top; shader: msdf; anchor: left; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></a-entity>
+                    <a-entity id="kazetachinuMovieImage" mixin="movieImage" material="src: #kazetachinu"
+                        visible="false"></a-entity>
+                    <a-entity id="karigurashiMovieImage" mixin="movieImage" material="src: #karigurashi"
+                        visible="false"></a-entity>
+                    <a-entity id="movieTitle" position="-0.68 -0.1 0"
+                        text="shader: msdf; anchor: left; width: 1.5; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Ponyo (2003)"></a-entity>
+                    <a-entity id="movieDescription" position="-0.68 -0.2 0"
+                        text="baseline: top; shader: msdf; anchor: left; font: https://cdn.aframe.io/examples/ui/Viga-Regular.json; color: white; value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."></a-entity>
                 </a-entity>
             </a-entity>
         </a-entity>
